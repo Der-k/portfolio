@@ -14,6 +14,10 @@ import { sectionBanners, type SectionBannerConfig } from "@/data/banners";
  * (Navbar, Hero, CertificateGallery, ProjectGallery, ...).
  */
 
+// Fixed on purpose: Next.js Cache Components forbids new Date() during prerender.
+// Update this once a year.
+const COPYRIGHT_YEAR = 2026;
+
 const leftBorders = ["border-accent", "border-gold", "border-brand"] as const;
 const markers = ["bg-gold", "bg-accent", "bg-brand"] as const;
 
@@ -638,7 +642,7 @@ export default function HomePage() {
       {/* Footer with the CV's tri-colour bar */}
       <footer className="mt-10">
         <p className="py-6 text-center text-sm text-muted">
-          © {new Date().getFullYear()} {profile.name}. All rights reserved.
+          © {COPYRIGHT_YEAR} {profile.name}. All rights reserved.
         </p>
         <div aria-hidden className="flex h-2">
           <div className="flex-[6] bg-brand" />
