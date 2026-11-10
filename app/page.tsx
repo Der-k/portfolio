@@ -186,21 +186,28 @@ function SectionBanner({
 }
 
 function CertificateBanner({
+  title,
   issuer,
   src,
 }: {
+  title: string;
   issuer: string;
   src?: string;
 }) {
   return (
-    <div className="relative h-28 overflow-hidden bg-brand">
+    <div
+      className={`relative aspect-[3/2] w-full overflow-hidden ${
+        src ? "border-b border-line bg-white" : "bg-brand"
+      }`}
+    >
       {src ? (
+        // object-contain: the whole certificate is visible, never cropped
         <Image
           src={src}
-          alt=""
+          alt={`${title} certificate`}
           fill
-          sizes="(min-width: 1024px) 280px, (min-width: 640px) 50vw, 100vw"
-          className="object-cover object-top"
+          sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"
+          className="object-contain"
           unoptimized={src.endsWith(".svg")}
         />
       ) : (
@@ -283,10 +290,6 @@ export default function HomePage() {
   const others = projects.filter((p) => p !== featured).slice(0, 4);
 
   // Banner tiles are built from the data files
-  const certificateTiles: BannerTile[] = [
-    ...certificates.map((c) => ({ src: c.image, label: c.title })),
-    ...listedCredentials.map((c) => ({ src: c.banner, label: c.title })),
-  ];
   const projectTiles: BannerTile[] = projects.map((p) => ({
     src: p.cover,
     label: p.name,
@@ -426,19 +429,14 @@ export default function HomePage() {
 
         {/* Certificates */}
         <section id="certificates" className="py-10">
-          <SectionBanner
-            config={sectionBanners.certificates}
-            tiles={certificateTiles}
-            size="wide"
-          />
           <SectionHeading title="Certificates" tone={2} />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {certificates.map((c) => (
               <article
                 key={c.id}
                 className="overflow-hidden rounded-card border border-line bg-white shadow-card"
               >
-                <CertificateBanner issuer={c.issuer} src={c.image} />
+                <CertificateBanner title={c.title} issuer={c.issuer} src={c.image} />
                 <div className="p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                     {c.category}
@@ -455,7 +453,11 @@ export default function HomePage() {
                 key={c.id}
                 className="overflow-hidden rounded-card border border-line bg-white shadow-card"
               >
-                <CertificateBanner issuer={c.issuer ?? c.title} src={c.banner} />
+                <CertificateBanner
+                  title={c.title}
+                  issuer={c.issuer ?? c.title}
+                  src={c.banner}
+                />
                 <div className="p-4">
                   <h3 className="font-bold text-brand">{c.title}</h3>
                   {c.issuer && (
